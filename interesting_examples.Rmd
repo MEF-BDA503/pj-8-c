@@ -1,0 +1,28 @@
+#Interesting R Examples
+##Cihan Tektunalı - BDA 503 - Fall 2017
+###1. Top 50 ggplot2 Visualizations - Examples with R code###
+* This website shows the different visualization types used in R package ggplot2. Also it contains the codes used to create these visualizations which help fastforward the learning period for beginners.
+
+    * [Go to web site](http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html)
+
+
+###2. Creating Interactive Visualizations With Plotly in R and Python###
+* This is a one page tutorial which tells about creating visualization with Plotly package. It gives some examples and also lists the advantages and disadvantages of the tool.
+
+    * [Go to web site](https://www.analyticsvidhya.com/blog/2017/01/beginners-guide-to-create-beautiful-interactive-data-visualizations-using-plotly-in-r-and-python/)
+
+
+###3. Advanced R: Visualization and Programming###
+* This presentation shows the advanced techniques used in R with code references and visualizations. Some graph types used are point, line,3D and contour plots.
+
+    * [Go to web site](https://www.is.uni-freiburg.de/ressourcen/computational-economics/3_advancedr.pdf)
+
+###4. R Packages and Short Descriptions of Their Functions###
+* This page gives a table including the names of several R packages and their fields of use. You can find package names for purposes like data analysis, data visualization, data import - export, forecasting or text mining.
+
+    * [Go to web site](https://www.computerworld.com/article/2921176/business-intelligence/great-r-packages-for-data-import-wrangling-visualization.html)
+
+###5. Visualizing Google Analytics Data With R###
+* This website gives step-by-step instructions on how to integrate and visualize Google Analytics Data with R. It can help to set up R with Google Analytics package and related dependencies.
+
+    * [Go to web site](http://online-behavior.com/analytics/r)
