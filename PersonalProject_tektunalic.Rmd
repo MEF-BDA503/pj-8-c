@@ -1,0 +1,67 @@
+---
+title: "Personal Project"
+author: "Cihan Tektunalı"
+date: "28 Ekim 2017"
+output: html_document
+---
+
+
+##1 Introduction
++ The data set I found ([Young People Survey data set]()) consists of responses of a survey done in 2013. Participants were asked multiple questions in 139 categories and evaluated their opinions in a scale of 1 to 5. For the rest of 11 categories, they selected from specific option sets of regarding category. 
+
++ The data consists of 1010 rows and 150 columns. 139 columns include integer values of intervals whereas 11 columns include categorical data (string).
+
++ There are missing values in some columns, so some comparisons may not be properly done without data cleaning. Rows with NA values should be considered to remove before creating visulizations. 
+
+## 1.1 What type of analysis can be done with this data set?
+
+ + Correlations between different answers can be explored to reach deeper insights about people's behaviors. 
+ 
+ + Predictions can be made based on specific set of columns. For example; X aged people having Y habits prefer to perform Z type of behavior or not.
+ 
+ + Missing values can be grouped in a way to predict behavior patterns. For example; unanswered questions shows a tendency or not.
+ 
+
+## 1.2 Load packages and data
+
+```{r setup, warning=FALSE}
+
+# Download data file from source
+#download.file("https://github.com/MEF-BDA503/pj-tektunalic/responses.csv")
+
+# Install tidyverse if not already installed
+if (!("tidyverse" %in% installed.packages())) {
+    install.packages("tidyverse", repos = "https://cran.r-project.org")
+}
+# Load tidyverse package
+library(tidyverse)
+# Load the data into variable d
+d=read.csv("responses.csv")
+```
+
+## 1.3 Initial visualizations 
+
+
++Below are some sample visualizations from this data set:
+
+
+```{r warning=FALSE}
+#Replace empty values with NA
+d$Gender[as.character(d$Gender)==""] <- NA
+
+#Create bar chart with variable and label parameters
+ggplot(d, aes(x=Age, fill=Gender))+geom_histogram(binwidth=1, alpha=.5, position="dodge")+labs(y="Participant Count",x="Age",title="Participant Numbers By Age (Gender)")
+
+```
+```{r warning=FALSE}
+#Replace empty values with NA
+d$Education[as.character(d$Education)==""] <- NA
+
+#Create bar chart with variable, axis and label parameters
+ggplot(d, aes(x=Age, fill=Education))+
+  geom_histogram(binwidth=1, alpha=.5, position="dodge")+
+  scale_x_continuous(breaks = c(seq(from = 10, to = 32, by = 1)))+
+  scale_y_continuous(breaks = c(seq(from = 0, to = 160, by = 20)))+
+  labs(y="Participant Count",x="Age",title="Participant Numbers By Age (Education Level)")
+```
+
