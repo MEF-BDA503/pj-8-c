@@ -1,5 +1,9 @@
 # The Progress Journal
 
+## Week 5 (Nov 30)
+
++ [My Analysis On Assignment 1: Esoph and Youth Survey](Assignment_Esoph_and_Young_People__Survey.html)
+
 ## Week 3 (Oct 24)
 
 + The data set I propose to use in my project is Young People Survey data set. [Here](https://www.kaggle.com/miroslavsabo/young-people-survey/data) is the source of the data and  [here](PersonalProject_tektunalic.html) is my initial exploratory data analysis on it.
