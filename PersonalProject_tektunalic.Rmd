@@ -1,21 +1,22 @@
 ---
 title: "Personal Project"
 author: "Cihan Tektunalı"
-date: "28 Ekim 2017"
+date: "28th Oct 2017"
 output: html_document
 ---
 
 
 ##1 Introduction
+
 + The data set I found ([Young People Survey data set]()) consists of responses of a survey done in 2013. Participants were asked multiple questions in 139 categories and evaluated their opinions in a scale of 1 to 5. For the rest of 11 categories, they selected from specific option sets of regarding category. 
 
-+ The data consists of 1010 rows and 150 columns. 139 columns include integer values of intervals whereas 11 columns include categorical data (string).
++ The data consists of 1010 rows and 150 columns. 139 columns include integer values of intervals (1 to 5) whereas 11 columns include categorical data (string).
 
-+ There are missing values in some columns, so some comparisons may not be properly done without data cleaning. Rows with NA values should be considered to remove before creating visulizations. 
++ There are missing values in some columns, so some comparisons may not be properly done without data cleaning. Rows with NA values should be considered to be filtered before creating visulizations. 
 
 ## 1.1 What type of analysis can be done with this data set?
 
- + Correlations between different answers can be explored to reach deeper insights about people's behaviors. 
+ + Correlations between different answer groups can be explored to reach deeper insights about people's behaviors. 
  
  + Predictions can be made based on specific set of columns. For example; X aged people having Y habits prefer to perform Z type of behavior or not.
  
@@ -34,34 +35,183 @@ if (!("tidyverse" %in% installed.packages())) {
     install.packages("tidyverse", repos = "https://cran.r-project.org")
 }
 # Load tidyverse package
-library(tidyverse)
+#library(tidyverse)
+library(dplyr)
+
+#install.packages("ggplot2")
+library(ggplot2)
+
+#For correlogram plots
+#install.packages("ggcorrplot")
+library(ggcorrplot)
+library("corrplot")
+library(RColorBrewer)
+
+
 # Load the data into variable d
 d=read.csv("responses.csv")
+
+#Create custom colors vector
+custom_colors=c("#E32800", "#FDB205","#FDF505","#009BDF","#E3FD05","#A7FD05","#7CBE00","#639700","#972000","#871D00","#50FF95","#00DEAF","#00B891","#00B5B8","#0080B8","#0063E8","#0047A7","#9F55FF","#C69BFF","#D69BFF","#B956FE","#DF56FE","#FE5681","#9BDF00")
 ```
 
-## 1.3 Initial visualizations 
+## 1.3 General View Of Data And Assumptions
+
+As it is seen below, numerical survey responses are mostly collected using a scale of 1 to 5. So we need a systematic approach to firstly group these answers then compare groups that will be created. I separated the answers to two main groups. These groups correspond to:
+
++ Agreers (answering 4 or 5 for each question meaning 'Strongly agree' - 'Enjoy very much' end of scale.)
++ Disagreers (answering 1 or 2 for each question meaning 'Strongly disagree' - 'Don't enjoy at all' end of scale.)
+
+I ignored neutrals (answering 3 in each category) in the context of this analysis to catch stronger tendencies in both ends.
+
+Also there are general categories to which each question belongs in this survey. These are:
+
++ Music Preferences
++ Movie Preferences
++ Hobbies And Interests
++ Phobias
++ Health Habits
++ Personality Traits, Views On Life And Opinions
++ Spending Habits
++ Demographics
+
+So I will try to catch possible correlations inside the selected categories I will choose and also in between two categories of interest. 
+
+```{r}
+#summary(d)
+#First five observations and data types for all columns
+glimpse(head(d,5))
 
 
-+Below are some sample visualizations from this data set:
+
+```
+
+## 1.4 Data Integrity Check
+
+Let's check whether we have rows witn NA values. 
+```{r}
+#Get NA totals by columns
+na_count <-sapply(d, function(y) sum(length(which(is.na(y)))))
+na_count <- data.frame(na_count)
+
+na_count
+
+```
+
+Because there is a lot of missing values compared to total row count, removing NA values totally is not preferred. Data removal will be applied to related columns in visualizations where necessary.
+
+
+## 2 Visualizations 
+
+
++Below are some sample visualizations to understand the data set. First, I want to see the respondents' profile by age and education level.
 
 
 ```{r warning=FALSE}
+
+#See how many empty rows exists
+#length(d$Gender[as.character(d$Gender)==""])
+
 #Replace empty values with NA
 d$Gender[as.character(d$Gender)==""] <- NA
 
 #Create histogram plot with variable and label parameters
-ggplot(d, aes(x=Age, fill=Gender))+geom_histogram(binwidth=1, alpha=.5, position="dodge")+labs(y="Participant Count",x="Age",title="Participant Numbers By Age (Gender)")
+ggplot(d, aes(x=Age, fill=Gender))+
+  geom_histogram(binwidth=1, alpha=.5, position="dodge")+
+  labs(y="Participant Count",x="Age",title="Participant Numbers By Age (Gender)")+
+  scale_fill_manual(values=custom_colors,
+                    name="Gender\n",
+                    #breaks=c("Female", "Male", "NA"),
+                    labels=c("Female", "Male", "NA"))
 
 ```
 ```{r warning=FALSE}
+#length(d$Education[as.character(d$Education)==""])
+
 #Replace empty values with NA
 d$Education[as.character(d$Education)==""] <- NA
 
 #Create histogram plot with variable, axis and label parameters
 ggplot(d, aes(x=Age, fill=Education))+
-  geom_histogram(binwidth=1, alpha=.5, position="dodge")+
-  scale_x_continuous(breaks = c(seq(from = 10, to = 32, by = 1)))+
-  scale_y_continuous(breaks = c(seq(from = 0, to = 160, by = 20)))+
-  labs(y="Participant Count",x="Age",title="Participant Numbers By Age (Education Level)")
+  geom_histogram(binwidth=1.25, alpha=1, position="dodge")+
+  scale_x_continuous(breaks = c(seq(from = 10, to = 32, by = 1)),limits = c(15,31))+
+  scale_y_continuous(breaks = c(seq(from = 0, to = 300, by = 20)),limits = c(0,160))+
+  labs(y="Participant Count",x="Age",title="Participant Numbers By Age (Education Level)")+
+  scale_fill_manual(values=custom_colors)
 ```
 
+
+```{r}
+
+# music_pref_agreers <- d  %>% 
+#   na.omit() %>% 
+#   #select(names(d)[1:19]) %>% 
+#   select(d,Music:Opera) %>%
+#   filter()
+
+#music_pref_disagreers
+
+
+music_pref <- d  %>%
+  na.omit() %>%
+  select(names(d)[1:19]) 
+
+# Correlation matrix
+corr <- round(cor(music_pref), 2)
+#corr
+
+#Correlogram
+ggcorrplot(corr, hc.order = TRUE, 
+           type = "lower", 
+           lab = TRUE, 
+           lab_size = 2, 
+           method="circle", 
+           colors = custom_colors, 
+           title="Correlogram of Music Preferences", 
+           ggtheme=theme_bw)
+
+
+M<-cor(music_pref)
+
+
+corrplot(M, diag = FALSE, order = "FPC",tl.pos = "td", tl.cex = 0.8, method = "color",type="upper",col=colorRampPalette(c("dark blue","white","orange"))(200))
+
+
+```
+
+According to correlation matrix, the highest negative correlation is between Pop music and Metal-Hardrock music choices. Positive correlations exist between Opera and Classical.Music, Metal-Hardrock, Rock and  Punk. 
+
+```{r warning=FALSE}
+
+# Create plots for habits by age
+#p1 <- 
+  ggplot(d, aes(x=Age, fill=Alcohol))+
+  geom_histogram(binwidth=1.25, alpha=1, position="dodge")+
+  scale_x_continuous(breaks = c(seq(from = 10, to = 32, by = 1)),limits = c(15,31))+
+  scale_y_continuous(breaks = c(seq(from = 0, to = 300, by = 20)),limits = c(0,150))+
+  labs(y="Participant Count",x="Age",title="Participant Numbers By Age (Alcohol Consumption)")+
+  scale_fill_manual(values=custom_colors)
+
+#p2<- 
+  ggplot(d, aes(x=Age, fill=Smoking))+
+  geom_histogram(binwidth=1.25, alpha=1, position="dodge")+
+  scale_x_continuous(breaks = c(seq(from = 10, to = 32, by = 1)),limits = c(15,31))+
+  scale_y_continuous(breaks = c(seq(from = 0, to = 300, by = 20)),limits = c(0,100))+
+  labs(y="Participant Count",x="Age",title="Participant Numbers By Age (Smoking)")+
+  scale_fill_manual(values=custom_colors)
+
+
+
+#multiplot(p1,p2,cols=1)
+```
+
+Graphs show that harmful habits also settle at the highest rate between ages 18 and 21.
+
+## References
+
++ https://www.r-graph-gallery.com/portfolio/ggplot2-package/
++ http://www.r-graph-gallery.com/48-grouped-barplot-with-ggplot2/
++ https://www.r-graph-gallery.com/portfolio/spider-radar-chart/
++ https://www.r-graph-gallery.com/142-basic-radar-chart/
++ http://genomicsclass.github.io/book/pages/dplyr_tutorial.html
++ http://r-statistics.co/Top50-Ggplot2-Visualizations-MasterList-R-Code.html

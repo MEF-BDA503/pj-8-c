@@ -1,5 +1,10 @@
 # The Progress Journal
 
+## Final Update (Jan 11)
+
++ [Final update on personal project](PersonalProject_tektunalic.html)
++ I finished Data Analysis With R course on Udacity. I also finished Unsupervised learning course on DataCamp. 
+
 ## Week 5 (Nov 30)
 
 + [My Analysis On Assignment 1: Esoph and Youth Survey](Assignment_Esoph_and_Young_People__Survey.html)
